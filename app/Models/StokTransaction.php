@@ -11,4 +11,14 @@ class StokTransaction extends Model
     protected $fillable = [
         'item_id', 'status' ,'qty', 'supplier_id', 'created_by'
     ];
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(supplier::class);
+    }
 }

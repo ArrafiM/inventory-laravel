@@ -27,6 +27,12 @@ class TransactionIndex extends Component
 
     public function allTransaction(){
         $data = StokTransaction::where('item_id', 'ilike', '%' . $this->search . '%')
+                ->with('item',function($query){
+                    $query->select('id','name');
+                })
+                ->with('supplier',function($query){
+                    $query->select('id','name');
+                })
                 ->paginate(10);
         return $data;
     }

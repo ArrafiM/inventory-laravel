@@ -32,6 +32,9 @@
                                 <thead>
                                     <tr>
                                     <th scope="col" class="text-sm pb-2 font-semibold text-left uppercase">
+                                        Id
+                                    </th>
+                                    <th scope="col" class="text-sm pb-2 font-semibold text-left uppercase">
                                         Name
                                     </th>
                                     <th scope="col" class="text-sm pb-2 font-semibold text-left uppercase">
@@ -57,7 +60,11 @@
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-stroke">
                                     @foreach ($items as $item)
                                     <tr class="hover:bg-strodivide-stroke">
-                                        <td class="text-sm font-medium whitespace-nowrap py-2">{{ $item->name }}
+                                        <td class="text-sm font-medium whitespace-nowrap py-2">
+                                        {{ $item->id }}
+                                        </td>
+                                        <td class="text-sm font-medium whitespace-nowrap py-2 text-secondary">
+                                        {{ $item->name }}
                                         </td>
                                         <td class="text-sm font-medium whitespace-nowrap py-2 text-secondary">
                                         {{ $item->type }}

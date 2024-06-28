@@ -40,35 +40,48 @@
                                 <thead>
                                     <tr>
                                     <th scope="col" class="text-sm pb-2 font-semibold text-left uppercase">
-                                        item_id
+                                        Item Id
                                     </th>
                                     <th scope="col" class="text-sm pb-2 font-semibold text-left uppercase">
-                                        status
+                                        Name
                                     </th>
-                                    <th scope="col" class="text-sm pb-2 font-semibold text-left uppercase">
+                                    <th scope="col" class="text-sm pb-2 font-semibold text-center uppercase">
+                                        Status
+                                    </th>
+                                    <th scope="col" class="text-sm pb-2 font-semibold text-center uppercase">
                                         qty
                                     </th>
-                                    <th scope="col" class="text-sm pb-2 font-semibold text-left uppercase">
+                                    <th scope="col" class="text-sm pb-2 font-semibold text-center uppercase">
                                         supplier_id
                                     </th>
-                                    <th scope="col" class="text-sm pb-2 font-semibold text-left uppercase">
+                                    {{-- <th scope="col" class="text-sm pb-2 font-semibold text-left uppercase">
                                         Action
-                                    </th>
+                                    </th> --}}
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-stroke">
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-stroke" >
                                     @foreach ($transactions as $item)
-                                    <tr class="hover:bg-strodivide-stroke">
+                                    <tr class="hover:bg-strodivide-stroke " style="height: 50px">
                                         <td class="text-sm font-medium whitespace-nowrap py-2">{{ $item->item_id }}
                                         </td>
-                                        <td class="text-sm font-medium whitespace-nowrap py-2">{{ $item->status }}
-                                        </td>
-                                        <td class="text-sm font-medium whitespace-nowrap py-2">{{ $item->qty }}
-                                        </td>
                                         <td class="text-sm font-medium whitespace-nowrap py-2 text-secondary">
-                                        {{ $item->supplier_id }}
+                                        {{ $item->item->name ?? '-' }}
                                         </td>
-                                        <td class="whitespace-nowrap py-2">
+                                        @if($item->status === 1)
+                                        <td class="text-sm font-medium whitespace-nowrap py-2 ">
+                                            <p style="background-color: green; border-radius: 10px; text-align: center; padding:20;">
+                                            Masuk</p></td>
+                                        @else
+                                        <td class="text-sm font-medium whitespace-nowrap py-2">
+                                            <p style="background-color: #B22222; border-radius: 10px; text-align: center; padding:20;">
+                                            Keluar</p></td>
+                                        @endif
+                                        <td class="text-sm font-medium whitespace-nowrap py-2 text-center">{{ $item->qty }}
+                                        </td>
+                                        <td class="text-sm font-medium whitespace-nowrap py-2 text-secondary text-center">
+                                        {{ $item->supplier->name ?? '-' }}
+                                        </td>
+                                        {{-- <td class="whitespace-nowrap py-2">
                                         <div class="flex flex-row items-center gap-3">
                                             <x-button wire:click='editForm({{ $item->id }})'
                                              class="inline-block w-fit bg-green-600 hover:bg-green-700 px-1 py-1">
@@ -83,7 +96,7 @@
                                                 </x-badge>
                                             </x-button>
                                         </div>
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                     @endforeach
                                 </tbody>
