@@ -26,14 +26,18 @@ class TransactionIndex extends Component
     }
 
     public function allTransaction(){
-        $data = StokTransaction::where('item_id', 'ilike', '%' . $this->search . '%')
-                ->with('item',function($query){
-                    $query->select('id','name');
-                })
-                ->with('supplier',function($query){
-                    $query->select('id','name');
-                })
-                ->paginate(10);
+        $data = StokTransaction::query()
+            ->join('items','stok_transactions.item_id','=','items.id')
+            ->select('stok_transactions.*','items.name')
+            ->where('items.name', 'ilike', '%' . $this->search . '%')
+            ->orderBy('created_at','desc')
+            ->with('item',function($query){
+                $query->select('id','name');
+            })
+            ->with('supplier',function($query){
+                $query->select('id','name');
+            })
+            ->paginate(10);
         return $data;
     }
 

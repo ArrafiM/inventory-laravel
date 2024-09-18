@@ -83,16 +83,22 @@
                                         </td>
                                         <td class="whitespace-nowrap py-2">
                                         <div class="flex flex-row items-center gap-3">
+                                            <x-button type="submit" class="inline-block w-fit bg-red-700 hover:bg-red-900 px-1 py-1"
+                                             wire:click='delete({{ $item->id }} )'>
+                                                <x-badge class="flex items-center bg-danger w-fit">
+                                                <x-icon-trash /><span class="text-white ms-2">Delete</span>
+                                                </x-badge>
+                                            </x-button>
                                             <x-button onclick="Livewire.dispatch('editForm', {id:{{$item->id}}})"
                                              class="inline-block w-fit bg-green-600 hover:bg-green-700 px-1 py-1">
                                                 <x-badge class="flex items-center bg-primary w-fit ">
                                                     <x-icon-edit /><span class="text-white ms-2">Edit</span>
                                                 </x-badge>
                                             </x-button>
-                                            <x-button type="submit" class="inline-block w-fit bg-red-700 hover:bg-red-900 px-1 py-1"
-                                             wire:click='delete({{ $item->id }} )'>
-                                                <x-badge class="flex items-center bg-danger w-fit">
-                                                <x-icon-trash /><span class="text-white ms-2">Delete</span>
+                                            <x-button type="submit" class="inline-block w-fit bg-blue-700 hover:bg-blue-900 px-1 py-1"
+                                             wire:click=''>
+                                                <x-badge class="flex items-center bg-primary w-fit">
+                                                <x-icon-eye /><span class="text-white ms-2">Detail</span>
                                                 </x-badge>
                                             </x-button>
                                         </div>

@@ -5,6 +5,7 @@ namespace App\Livewire\Pages\Item\Transaction;
 use Livewire\Component;
 use App\Models\StokTransaction;
 use App\Models\Stok;
+use App\Models\Supplier;
 use App\Models\Item;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -13,12 +14,16 @@ class TransactionCreate extends Component
     use LivewireAlert;
 
     public $item_id;
+    public $itemName;
     public $status;
     public $qty;
     public $supplier_id;
     public $edit = false;
     public $transactionData = null;
-
+    public $search = '';
+    public $selectedItemId;
+    public $showSupplierField = false;
+    
     protected $rules = [
         'item_id' => 'required|integer|max:255',
         'status' => 'required|integer',
@@ -34,6 +39,20 @@ class TransactionCreate extends Component
         return $this->redirectRoute('dashboard.item.transaction', [], true, navigate: true);
     }
 
+    public function selectItem($id, $name)
+    {
+        $this->item_id = $id;
+        $this->itemName = $name;
+        $this->selectedItemId = $id;
+    }
+
+    public function clearItemId()
+    {
+        $this->item_id = null;
+        $this->selectedItemId = null;
+        $this->itemName = '';
+    }
+
     public function submitForm()
     {
         $this->validate();
@@ -42,8 +61,14 @@ class TransactionCreate extends Component
             'item_id' => $this->item_id,
             'status' => $this->status,
             'qty' => $this->qty,
-            'supplier_id' => $this->supplier_id ?? null
+            'supplier_id' => $this->supplier_id ?? null,
+            "created_by" => auth()->user()->id,
         ];
+
+        if($this->status == 1 && !$this->supplier_id){
+            $this->alertMessage('warning','Supplier not selected');
+            return false;
+        }
         // dd($transactionData);
         $item = Item::find($this->item_id);
         if(!$item) {
@@ -67,7 +92,7 @@ class TransactionCreate extends Component
     public function cekStok($itemId){
         $stok = Stok::query()->where('item_id',$itemId)->first();
         if(!$stok) {
-            $this->alertMessage('warning','Item stok not found!');
+            $this->alertMessage('warning','Item stok not enough or item not found!');
             return false;
         }
         if($stok->total < $this->qty) {
@@ -86,7 +111,11 @@ class TransactionCreate extends Component
 
     public function updateStok($itemId){
         $stok = Stok::query()->where('item_id',$itemId)->first();
-        if(!$stok) return false;
+        if(!$stok && $this->status == 1) {
+            $data = ["item_id" => $itemId, "total" => $this->qty, "created_by" => auth()->user()->id];
+            Stok::create($data);
+            return true;
+        }
         switch($this->status){
             case 1:
                 $stok->total += $this->qty; break;
@@ -122,7 +151,10 @@ class TransactionCreate extends Component
 
     public function render()
     {
-        return view('livewire.pages.item.transaction.transaction-create');
+        return view('livewire.pages.item.transaction.transaction-create',[
+            'items' => $this->allItem(),
+            'suppliers' => $this->allSupplier(),
+        ]);
     }
 
     public function editForm($id){
@@ -133,6 +165,50 @@ class TransactionCreate extends Component
         $this->status = $transactionData->status;
         $this->qty = $transactionData->qty;
         $this->supplier_id = $transactionData->supplier_id;
+    }
+
+    public function allItem(){
+        $data = Item::where('name', 'ilike', '%' . $this->search . '%')
+            ->orderBy('created_at','desc')
+            ->with('category',function($query){
+                $query->select('id','name');
+            })
+            ->with('stok',function($query){
+                $query->select('id','item_id','total');
+            })
+            ->paginate(10);
+        return $data;
+    }
+
+    public $showSupplierModal = false;
+    public $searchSupplier = '';
+    public $supplierName = '';
+
+    public function allSupplier(){
+        $data = Supplier::where('name', 'ilike', '%' . $this->searchSupplier . '%')
+                    ->paginate(10);
+        return $data;
+    }
+
+    // Function to open supplier modal
+    public function openSupplierModal()
+    {
+        // $this->suppliers = $this->allSupplier();
+        $this->showSupplierModal = true;
+    }
+
+    // Function to close supplier modal
+    public function closeSupplierModal()
+    {
+        $this->showSupplierModal = false;
+    }
+
+    // Function to select supplier and close modal
+    public function selectSupplier($id, $name)
+    {
+        $this->supplier_id = $id;
+        $this->supplierName = $name;
+        $this->showSupplierModal = false;
     }
     
 }

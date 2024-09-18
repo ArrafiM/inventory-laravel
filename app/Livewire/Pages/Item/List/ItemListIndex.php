@@ -21,7 +21,7 @@ class ItemListIndex extends Component
     public function render()
     {
         return view('livewire.pages.item.list.item-list',[
-            'items' => $this->allItem()
+            'items' => $this->allItem(),
         ]);
     }
 
@@ -33,7 +33,7 @@ class ItemListIndex extends Component
             ->with('stok',function($query){
                 $query->select('id','item_id','total');
             })
-            ->paginate(10);;
+            ->paginate(10);
         return $data;
     }
 

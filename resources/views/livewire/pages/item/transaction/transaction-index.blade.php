@@ -54,6 +54,9 @@
                                     <th scope="col" class="text-sm pb-2 font-semibold text-center uppercase">
                                         supplier_id
                                     </th>
+                                    <th scope="col" class="text-sm pb-2 font-semibold text-center uppercase">
+                                        created at
+                                    </th>
                                     {{-- <th scope="col" class="text-sm pb-2 font-semibold text-left uppercase">
                                         Action
                                     </th> --}}
@@ -80,6 +83,9 @@
                                         </td>
                                         <td class="text-sm font-medium whitespace-nowrap py-2 text-secondary text-center">
                                         {{ $item->supplier->name ?? '-' }}
+                                        </td>
+                                        <td class="text-sm font-medium whitespace-nowrap py-2 text-center">
+                                         {{ \Carbon\Carbon::parse($item->created_at)->setTimezone('Asia/Jakarta')->format('d M Y H:i') }}
                                         </td>
                                         {{-- <td class="whitespace-nowrap py-2">
                                         <div class="flex flex-row items-center gap-3">
